@@ -45,7 +45,6 @@ class View(metaclass=ABCMeta):
         self._display = pg.display.set_mode((self._width, self._height))
         self._run_game = True
         self._clock = pg.time.Clock()
-        self._fps = 30
 
     # 구현 - 이미지를 화면에 추가하는 메소드
     def _image_to_screen(self, img, w, h, pos):
@@ -69,10 +68,7 @@ class View(metaclass=ABCMeta):
 class MenuView(View):
     def __init__(self):
         super().__init__()
-        pass
-
-    def run(self):
-        return GameStarterView()
+        self.__idx = 0
 
     def __visualize(self):
         w, h, lst = self._width, self._height, list()
@@ -82,6 +78,32 @@ class MenuView(View):
         lst.append(self._text_to_screen(self.SMALL, "DESCRIPTION", self.GREEN, (w // 2, h * 0.55)))
         lst.append(self._text_to_screen(self.SMALL, "SETTING", self.BLUE, (w // 2, h * 0.65)))
         lst.append(self._text_to_screen(self.SMALL, "EXIT", self.PURPLE, (w // 2, h * 0.75)))
+        self._image_to_screen(self.ARROW, 30, 30, (lst[self.__idx].midleft[0] * 0.93, lst[self.__idx].midleft[1]))
+
+    def run(self):
+        # If this loop is end then one frame is over.
+        while self._run_game:
+            for evt in pg.event.get():
+                if evt.type == pg.QUIT:
+                    exit()
+                elif evt.type == pg.KEYDOWN:
+                    if evt.key == pg.K_UP:
+                        if self.__idx <= 0:
+                            self.__idx = 3
+                        else:
+                            self.__idx -= 1
+                    elif evt.key == pg.K_DOWN:
+                        if self.__idx >= 3:
+                            self.__idx = 0
+                        else:
+                            self.__idx += 1
+                    elif evt.key == pg.K_RETURN:
+                        return self.__idx
+                else:
+                    continue
+            self.__visualize()
+            pg.display.update()
+            self._clock.tick(60)
 
 
 class GameStarterView(View):
@@ -89,19 +111,6 @@ class GameStarterView(View):
         super().__init__()
         self.__game_board = GameBoard()
         self.__block_generator = BlockGenerator()
-
-    def run(self):
-        # If this loop is end then one frame is over.
-        while self._run_game:
-            # Generate Random Block (return Block)
-            block = self.__block_generator.generate()
-
-            # Register and Visualize New Block To Board (return Board)
-            while not self.__game_board.is_bottom():
-                board = self.__game_board.register(block)
-                self.__visualize(block, board)
-                pg.display.update()
-                self._clock.tick(self._fps)
 
     def __visualize(self, block, board):
         w, h = self._width, self._height
@@ -147,14 +156,23 @@ class GameStarterView(View):
         for bd in np.argwhere(board == 1):
             pg.draw.rect(self._display, self.GRAY, (275 + bd[1] * 25, 50 + bd[0] * 25, 25, 25))
 
+    def run(self):
+        # If this loop is end then one frame is over.
+        while self._run_game:
+            # Generate Random Block (return Block)
+            block = self.__block_generator.generate()
+
+            # Register and Visualize New Block To Board (return Board)
+            while not self.__game_board.is_bottom():
+                board = self.__game_board.register(block)
+                self.__visualize(block, board)
+                pg.display.update()
+                self._clock.tick(30)
+
 
 class DescriptionView(View):
     def __init__(self):
         super().__init__()
-        pass
-
-    def run(self):
-        pass
 
     def __visualize(self):
         w, h = self._width, self._height
@@ -180,14 +198,21 @@ class DescriptionView(View):
         _ = self._text_to_screen(self.SMALL, "Spacebar", self.BLACK, (w // 2, h // 2 + 115))
         _ = self._text_to_screen(self.SMALL, "바로 떨어짐", self.BLACK, (w // 2, h // 2 + 180))
 
+    def run(self):
+        while self._run_game:
+            for evt in pg.event.get():
+                if evt.type == pg.QUIT:
+                    exit()
+                elif evt.type == pg.KEYDOWN:
+                    return -1
+            self.__visualize()
+            pg.display.update()
+            self._clock.tick(60)
+
 
 class SettingView(View):
     def __init__(self):
         super().__init__()
-        pass
-
-    def run(self):
-        pass
 
     def __visualize(self):
         w, h = self._width, self._height
@@ -197,14 +222,20 @@ class SettingView(View):
         _ = self._text_to_screen(self.SMALL, "배경음", self.WHITE, (w // 2 - 300, h // 2 - 100))
         _ = pg.draw.rect(self._display, self.WHITE, (w // 2 - 200, h // 2 - 120, 400, 40), 3)
 
+    def run(self):
+        while self._run_game:
+            for evt in pg.event.get():
+                if evt.type == pg.QUIT:
+                    exit()
+            self.__visualize()
+            pg.display.update()
+            self._clock.tick(60)
+
 
 class EndView(View):
     def __init__(self):
         super().__init__()
-        pass
-
-    def run(self):
-        pass
+        self.__idx = 0
 
     def __visualize(self):
         w, h, lst = self._width, self._height, list()
@@ -212,4 +243,31 @@ class EndView(View):
         _ = self._text_to_screen(self.MEDIUM, "게임을 종료하시겠습니까?", self.RED, (w // 2, h // 2 - 100))
         lst.append(self._text_to_screen(self.SMALL, "YES", self.RED, (w // 2 - 80, h // 2 + 40)))
         lst.append(self._text_to_screen(self.SMALL, "NO", self.BLUE, (w // 2 + 80, h // 2 + 40)))
-        self._image_to_screen(self.ARROW, 30, 30, (lst[idx].midleft[0] * 0.95, lst[idx].midleft[1]))
+        self._image_to_screen(self.ARROW, 30, 30, (lst[self.__idx].midleft[0] * 0.95, lst[self.__idx].midleft[1]))
+
+    def run(self):
+        while self._run_game:
+            for evt in pg.event.get():
+                if evt.type == pg.QUIT:
+                    exit()
+                elif evt.type == pg.KEYDOWN:
+                    if evt.key == pg.K_LEFT:
+                        if self.__idx <= 0:
+                            self.__idx = 1
+                        else:
+                            self.__idx -= 1
+                    elif evt.key == pg.K_RIGHT:
+                        if self.__idx >= 1:
+                            self.__idx = 0
+                        else:
+                            self.__idx += 1
+                    elif evt.key == pg.K_RETURN:
+                        if self.__idx == 0:
+                            exit()
+                        else:
+                            return -1
+                else:
+                    continue
+            self.__visualize()
+            pg.display.update()
+            self._clock.tick(60)
