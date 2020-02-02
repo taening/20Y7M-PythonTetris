@@ -26,10 +26,14 @@ class Block(object):
 
     def down(self):
         for pt in self.__pattern:
-            pt[:, 0] += 1
+            if pt[np.argmax(pt[:, 0])][0] < 19:
+                pt[:, 0] += 1
+            # TODO: 경우 2 - 블록이 다른 블록 위에 올라오는 경우
 
     def drop(self):
-        pass
+        for pt in self.__pattern:
+            while pt[np.argmax(pt[:, 0])][0] < 19:
+                pt[:, 0] += 1
 
     def rotate(self):
         if self.__idx >= self.__len - 1:
