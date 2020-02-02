@@ -75,7 +75,13 @@ class MenuView(View):
         return GameStarterView()
 
     def __visualize(self):
-        pass
+        w, h, lst = self._width, self._height, list()
+        _ = self._image_to_screen(self.MENU, w, h, (w // 2, h // 2))
+        _ = self._text_to_screen(self.LARGE, "TETRIS", self.MINT, (w // 2, h * 0.25))
+        lst.append(self._text_to_screen(self.SMALL, "START", self.RED, (w // 2, h * 0.45)))
+        lst.append(self._text_to_screen(self.SMALL, "DESCRIPTION", self.GREEN, (w // 2, h * 0.55)))
+        lst.append(self._text_to_screen(self.SMALL, "SETTING", self.BLUE, (w // 2, h * 0.65)))
+        lst.append(self._text_to_screen(self.SMALL, "EXIT", self.PURPLE, (w // 2, h * 0.75)))
 
 
 class GameStarterView(View):
@@ -151,7 +157,28 @@ class DescriptionView(View):
         pass
 
     def __visualize(self):
-        pass
+        w, h = self._width, self._height
+        # Background Design
+        self._display.fill(self.WHITE)
+        self.DESCRIPTION.set_alpha(100)
+        _ = self._image_to_screen(self.DESCRIPTION, w, h, (w // 2, h // 2))
+
+        # Description Design
+        _ = self._text_to_screen(self.MEDIUM, "게임 설명", self.BLACK, (w // 2, h // 2 - 250))
+        _ = pg.draw.rect(self._display, (0, 0, 0), (w // 2 - 250, h // 2 - 220, 500, 3))
+
+        # Arrow Keyboard Design
+        _ = self._image_to_screen(self.KEYBOARD, 200, 100, (w // 2, h // 2 - 80))
+        _ = self._text_to_screen(self.SMALL, "왼쪽 이동", self.BLACK, (w // 2 - 170, h // 2 - 50))
+        _ = self._text_to_screen(self.SMALL, "오른쪽 이동", self.BLACK, (w // 2 + 170, h // 2 - 50))
+        _ = self._text_to_screen(self.SMALL, "블록 회전", self.BLACK, (w // 2, h // 2 - 150))
+        _ = self._text_to_screen(self.SMALL, "빠르게 떨어짐", self.BLACK, (w // 2, h // 2 + 10))
+
+        # Space Keyboard Design
+        _ = pg.draw.rect(self._display, (230, 230, 230), (w // 2 - 100, h // 2 + 90, 200, 45))
+        _ = pg.draw.rect(self._display, self.BLACK, (w // 2 - 100, h // 2 + 90, 200, 45), 1)
+        _ = self._text_to_screen(self.SMALL, "Spacebar", self.BLACK, (w // 2, h // 2 + 115))
+        _ = self._text_to_screen(self.SMALL, "바로 떨어짐", self.BLACK, (w // 2, h // 2 + 180))
 
 
 class SettingView(View):
@@ -163,7 +190,12 @@ class SettingView(View):
         pass
 
     def __visualize(self):
-        pass
+        w, h = self._width, self._height
+        self._display.fill(self.BLACK)
+        _ = self._text_to_screen(self.MEDIUM, "시스템 설정", self.WHITE, (w // 2, h // 2 - 250))
+        _ = self._text_to_screen(self.MEDIUM, "해상도", self.WHITE, (w // 2 - 300, h // 2 - 150))
+        _ = self._text_to_screen(self.SMALL, "배경음", self.WHITE, (w // 2 - 300, h // 2 - 100))
+        _ = pg.draw.rect(self._display, self.WHITE, (w // 2 - 200, h // 2 - 120, 400, 40), 3)
 
 
 class EndView(View):
@@ -175,4 +207,9 @@ class EndView(View):
         pass
 
     def __visualize(self):
-        pass
+        w, h, lst = self._width, self._height, list()
+        self._display.fill(self.BLACK)
+        _ = self._text_to_screen(self.MEDIUM, "게임을 종료하시겠습니까?", self.RED, (w // 2, h // 2 - 100))
+        lst.append(self._text_to_screen(self.SMALL, "YES", self.RED, (w // 2 - 80, h // 2 + 40)))
+        lst.append(self._text_to_screen(self.SMALL, "NO", self.BLUE, (w // 2 + 80, h // 2 + 40)))
+        self._image_to_screen(self.ARROW, 30, 30, (lst[idx].midleft[0] * 0.95, lst[idx].midleft[1]))
