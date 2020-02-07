@@ -1,10 +1,12 @@
 from view import *
+from music import *
 
 
 class Game(object):
     def __init__(self):
         self.__run_game = True
         self.__fps = 100
+        self.__music = Music()
 
     def run(self):
         # If this loop is end then all game is over.
