@@ -3,7 +3,7 @@ import pygame as pg
 
 class Music(object):
     def __init__(self):
-        pg.mixer.pre_init(44100, 16, 3, 4096)
+        pg.mixer.pre_init(44100, 16, 1, 4096)
         pg.mixer.init()
         self.__vol = 0.1
         self.__bgm = None
@@ -20,3 +20,7 @@ class Music(object):
         self.__bgm = pg.mixer.Sound(path)
         self.__bgm.set_volume(self.__vol)
         self.__bgm.play(-1)
+
+    def stop(self):
+        if isinstance(self.__bgm, pg.mixer.Sound):
+            self.__bgm.stop()
