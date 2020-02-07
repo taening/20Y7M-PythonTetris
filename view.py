@@ -227,6 +227,9 @@ class SettingView(View):
             for evt in pg.event.get():
                 if evt.type == pg.QUIT:
                     exit()
+                elif evt.type == pg.KEYDOWN:
+                    if evt.key == pg.K_RETURN:
+                        return -1
             self.__visualize()
             pg.display.update()
             self._clock.tick(60)
