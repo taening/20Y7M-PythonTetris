@@ -9,7 +9,11 @@ class GameBoard(object):
         pg.time.set_timer(pg.USEREVENT, 1000)
 
     def is_bottom(self):
-        return self.__bottom
+        if self.__bottom is True:
+            self.__bottom = False
+            return True
+        else:
+            return False
 
     def register(self, block):
         if not isinstance(block, Block):
