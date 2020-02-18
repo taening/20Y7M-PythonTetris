@@ -92,12 +92,13 @@ class GameStarterView(View):
 
             # Register and Visualize New Block To Board (return Board)
             while not self.__game_board.is_bottom():
-                board = self.__game_board.register(block)
-                self.__visualize(block, board)
+                self.__game_board.register(block)
+                self.__game_board.movement()
+                self.__visualize(self.__game_board.get_board())
                 pg.display.update()
                 self._clock.tick(self._fps)
 
-    def __visualize(self, block, board):
+    def __visualize(self, board):
         w, h = self._width, self._height
         self._display.fill(self.BLACK)
         self.GAME.set_alpha(50)
@@ -133,10 +134,11 @@ class GameStarterView(View):
             for col in range(11):
                 pg.draw.line(self._display, self.GRAY, (275 + col * 25, 50), (275 + col * 25, 550), 1)
 
+        '''
         # Draw Active Block
         for pt in block.get_pattern():
             pg.draw.rect(self._display, block.get_color(), (275 + pt[1] * 25, 50 + pt[0] * 25, 25, 25))
-
+        '''
         # Draw Inactive Block
         for bd in np.argwhere(board == 1):
             pg.draw.rect(self._display, self.GRAY, (275 + bd[1] * 25, 50 + bd[0] * 25, 25, 25))
