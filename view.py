@@ -15,6 +15,7 @@ class View(metaclass=ABCMeta):
     RED = (255, 0, 0)
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
+    SKY_BLUE = (135, 206, 235)
     YELLOW = (255, 255, 0)
     PURPLE = (255, 0, 255)
     MINT = (0, 255, 255)
@@ -94,11 +95,11 @@ class GameStarterView(View):
             while not self.__game_board.is_bottom():
                 self.__game_board.register(block)
                 self.__game_board.movement()
-                self.__visualize(self.__game_board.get_board())
+                self.__visualize()
                 pg.display.update()
                 self._clock.tick(self._fps)
 
-    def __visualize(self, board):
+    def __visualize(self):
         w, h = self._width, self._height
         self._display.fill(self.BLACK)
         self.GAME.set_alpha(50)
@@ -124,9 +125,9 @@ class GameStarterView(View):
         _ = pg.draw.rect(self._display, self.WHITE, (10, 420, 200, 50), 3)
 
         # Game Board Design
-        _ = pg.draw.rect(self._display, self.PURPLE, (265, 50, 10, 500))
-        _ = pg.draw.rect(self._display, self.PURPLE, (525, 50, 10, 500))
-        _ = pg.draw.rect(self._display, self.PURPLE, (265, 550, 270, 10))
+        _ = pg.draw.rect(self._display, self.SKY_BLUE, (265, 50, 10, 500))
+        _ = pg.draw.rect(self._display, self.SKY_BLUE, (525, 50, 10, 500))
+        _ = pg.draw.rect(self._display, self.SKY_BLUE, (265, 550, 270, 10))
 
         # Game Board Guide Line Design
         for row in range(21):
@@ -134,14 +135,12 @@ class GameStarterView(View):
             for col in range(11):
                 pg.draw.line(self._display, self.GRAY, (275 + col * 25, 50), (275 + col * 25, 550), 1)
 
-        '''
-        # Draw Active Block
-        for pt in block.get_pattern():
-            pg.draw.rect(self._display, block.get_color(), (275 + pt[1] * 25, 50 + pt[0] * 25, 25, 25))
-        '''
-        # Draw Inactive Block
-        for bd in np.argwhere(board == 1):
-            pg.draw.rect(self._display, self.GRAY, (275 + bd[1] * 25, 50 + bd[0] * 25, 25, 25))
+        # Draw Block
+        for r, row in enumerate(self.__game_board.get_board()):
+            for c, col in enumerate(row):
+                if any(col) is True:
+                    pg.draw.rect(self._display, (10, 10, 10), (275 + c * 25, 50 + r * 25, 25, 25))
+                    pg.draw.rect(self._display, col, (275 + c * 25 + 1, 50 + r * 25 + 1, 24, 24))
 
 
 class DescriptionView(View):
