@@ -1,5 +1,9 @@
 # Python_Tetris
-The purpose of this project is to create Tetris game code with OOP(Object Oriented Programming).
+The purpose of this project is to create Tetris game code with OOP(Object Oriented Programming). <br/>
+I read the book below and reference thier methodology. <br/>
+This project is not working properly now. <b>(Break in development)</b> <br/>
+If i have time, i will complete this project. <br/>
+<img src=/result/Object_Book.jpg width="30%" height="30%"></img> <br/>
 
 ## Requirements
 Code is written in Python 3.6 and requires:
